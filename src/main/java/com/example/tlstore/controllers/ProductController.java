@@ -54,6 +54,12 @@ public class ProductController {
         ProductDto updatedProduct = iProductService.patchProduct(ProductId , ProductDto);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable("id") Long ProductId,
+                                                   @RequestBody ProductDto productDto) {
+        ProductDto updatedProduct = iProductService.updateProduct(ProductId , productDto);
+        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+    }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long ProductId){

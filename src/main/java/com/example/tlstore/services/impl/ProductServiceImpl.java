@@ -6,7 +6,6 @@ import com.example.tlstore.dtos.ProductPagination;
 import com.example.tlstore.entities.Category;
 import com.example.tlstore.entities.Product;
 import com.example.tlstore.exceptions.NotFoundException;
-import com.example.tlstore.repositories.CategoryRepository;
 import com.example.tlstore.repositories.ProductRepository;
 import com.example.tlstore.services.ICategoryService;
 import com.example.tlstore.services.IProductService;
@@ -14,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -125,6 +125,24 @@ public class ProductServiceImpl implements IProductService {
 
     }
 
+    // Cập nhật lại Product (Cập nhật lại toàn bộ các thuộc tính)
+    @Override
+    public ProductDto updateProduct(Long id, ProductDto productDto) {
+        Product existingProduct = productRepository.findById(id).orElse(null);
+        if (existingProduct == null) throw new NotFoundException("Can not found product !Unable to update Product!");
+
+        BeanUtils.copyProperties(productDto, existingProduct);
+
+        CategoryDto newCategoryDto = iCategoryService.getCategoryById(productDto.getCategory().getId());
+        Category newCategory = modelMapper.map(newCategoryDto, Category.class);
+        existingProduct.setCategory(newCategory);
+
+        existingProduct.setUpdateAt(new Date(new java.util.Date().getTime()));
+        Product updatedProduct = productRepository.save(existingProduct);
+        ProductDto updatedProductDto = modelMapper.map(updatedProduct, ProductDto.class);
+        return updatedProductDto;
+
+    }
     @Override
     public void deleteProduct(Long ProductId) {
         Optional<Product> existingProduct = productRepository.findById(ProductId);

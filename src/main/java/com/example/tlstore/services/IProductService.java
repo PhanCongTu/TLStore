@@ -21,6 +21,9 @@ public interface IProductService {
     // Cập nhật lại Product (chỉ cập nhật những thuộc tính muốn thay đổi)
     ProductDto patchProduct(Long id, Map<Object, Object> ProductDto);
 
+    // Cập nhật lại Product (Cập nhật lại toàn bộ các thuộc tính)
+    ProductDto updateProduct(Long id, ProductDto productDto);
+
     void deleteProduct(Long ProductId);
 
     List<ProductDto> searchByProductName(String name);

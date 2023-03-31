@@ -21,6 +21,8 @@ public interface ICategoryService {
 
     CategoryDto patchCategory(Long id, Map<Object, Object> categoryDto);
 
+    CategoryDto updateCategory(Long id, CategoryDto categoryDto);
+
     void deleteCategory(Long categoryId);
 
     List<CategoryDto> searchByName(String name);

@@ -8,6 +8,7 @@ import com.example.tlstore.repositories.CategoryRepository;
 import com.example.tlstore.services.ICategoryService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -103,6 +104,20 @@ public class CategoryServiceImpl implements ICategoryService {
         Category updatedCategory = categoryRepository.save(existingCategory.get());
         CategoryDto updatedCategoryDto = modelMapper.map(updatedCategory, CategoryDto.class);
 
+        return updatedCategoryDto;
+
+    }
+
+    // Cập nhật lại category (cập nhật lại toàn bộ các thuộc tính)
+    @Override
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+        Category existingCategory = categoryRepository.findById(id).orElse(null);
+        if (existingCategory == null) throw new NotFoundException("Unable to update category!");
+
+        BeanUtils.copyProperties(categoryDto, existingCategory);
+        existingCategory.setUpdateAt(new Date(new java.util.Date().getTime()));
+        Category updatedCategory = categoryRepository.save(existingCategory);
+        CategoryDto updatedCategoryDto = modelMapper.map(updatedCategory, CategoryDto.class);
         return updatedCategoryDto;
 
     }

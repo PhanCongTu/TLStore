@@ -1,18 +1,12 @@
 package com.example.tlstore.entities;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "user")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -26,6 +20,4 @@ public class User implements Serializable {
     private String userName;
     private String passWord;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles = new ArrayList<>();
 }

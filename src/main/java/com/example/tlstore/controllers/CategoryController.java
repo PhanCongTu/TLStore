@@ -2,6 +2,8 @@ package com.example.tlstore.controllers;
 
 import com.example.tlstore.dtos.CategoryDto;
 import com.example.tlstore.services.ICategoryService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,11 +17,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/Category")
+
 public class CategoryController {
     @Autowired
     ICategoryService iCategoryService;
 
+
     @GetMapping("")
+    @ApiOperation(value = "Get user by ID", position = 1)
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         List<CategoryDto> listCategory = iCategoryService.getAllCategories();
         if (listCategory.isEmpty()) {
@@ -50,8 +55,15 @@ public class CategoryController {
 
     @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDto> patchCategory(@PathVariable("id") Long categoryId,
-                                                   @RequestBody Map<Object, Object> categoryDto) {
+                                                     @RequestBody Map<Object, Object> categoryDto) {
         CategoryDto updatedCategory = iCategoryService.patchCategory(categoryId , categoryDto);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable("id") Long categoryId,
+                                                     @RequestBody CategoryDto categoryDto) {
+        CategoryDto updatedCategory = iCategoryService.updateCategory(categoryId , categoryDto);
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
