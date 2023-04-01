@@ -1,12 +1,11 @@
 package com.example.tlstore.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -21,10 +20,13 @@ public class Product implements Serializable {
 
     @Column(nullable = false)
     private String productName;
+
     @Column(nullable = false)
     private int quantity;
+
     @Column(nullable = false)
     private int sold = 0;
+
     @Column(length = 1000)
     private String description;
 
@@ -34,11 +36,31 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private Boolean isActive = true;
 
+    @Column(nullable = false, updatable = false)
     private Date createAt = new Date(new java.util.Date().getTime());
+
     private Date updateAt= new Date(new java.util.Date().getTime());
 
     @ManyToOne(fetch = FetchType.LAZY)
     // sử dụng FetchType.LAZY vì nếu không chúng ta sẽ quay lại việc tìm nạp EAGER
     private Category category;
+
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL
+    )
+    private Collection<ProductImage> productImages;
+
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL
+    )
+    private Collection<CartItem> cartItems;
+
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL
+    )
+    private Collection<OrderItem> orderItems;
 
 }

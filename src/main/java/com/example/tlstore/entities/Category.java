@@ -40,5 +40,5 @@ public class Category implements Serializable {
             mappedBy = "category",
             cascade = CascadeType.ALL
     )
-    private Collection<Product> Products ;
+    private Collection<Product> products ;
 }

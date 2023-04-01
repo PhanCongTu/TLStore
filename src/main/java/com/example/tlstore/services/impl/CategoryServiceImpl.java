@@ -6,6 +6,7 @@ import com.example.tlstore.entities.Category;
 import com.example.tlstore.exceptions.NotFoundException;
 import com.example.tlstore.repositories.CategoryRepository;
 import com.example.tlstore.services.ICategoryService;
+import com.example.tlstore.utils.MapperUtils;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -110,11 +111,14 @@ public class CategoryServiceImpl implements ICategoryService {
 
     // Cập nhật lại category (cập nhật lại toàn bộ các thuộc tính)
     @Override
-    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) throws NoSuchFieldException, IllegalAccessException {
         Category existingCategory = categoryRepository.findById(id).orElse(null);
         if (existingCategory == null) throw new NotFoundException("Unable to update category!");
 
-        BeanUtils.copyProperties(categoryDto, existingCategory);
+//        BeanUtils.copyProperties(categoryDto, existingCategory);
+
+        MapperUtils.toDto(categoryDto,existingCategory);
+
         existingCategory.setUpdateAt(new Date(new java.util.Date().getTime()));
         Category updatedCategory = categoryRepository.save(existingCategory);
         CategoryDto updatedCategoryDto = modelMapper.map(updatedCategory, CategoryDto.class);
@@ -137,8 +141,7 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<CategoryDto> searchByName(String name) {
         List<Category> categories = categoryRepository.findByNameContainingIgnoreCase(name);
         List<CategoryDto> categoryDtos = new ArrayList<>();
-        for (Category category : categories
-        ) {
+        for (Category category : categories) {
             CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
             categoryDtos.add(categoryDto);
         }

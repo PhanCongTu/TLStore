@@ -53,16 +53,16 @@ public class CategoryController {
         return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 
-    @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoryDto> patchCategory(@PathVariable("id") Long categoryId,
-                                                     @RequestBody Map<Object, Object> categoryDto) {
-        CategoryDto updatedCategory = iCategoryService.patchCategory(categoryId , categoryDto);
-        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-    }
+//    @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<CategoryDto> patchCategory(@PathVariable("id") Long categoryId,
+//                                                     @RequestBody Map<Object, Object> categoryDto) {
+//        CategoryDto updatedCategory = iCategoryService.patchCategory(categoryId , categoryDto);
+//        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+//    }
 
-    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDto> updateCategory(@PathVariable("id") Long categoryId,
-                                                     @RequestBody CategoryDto categoryDto) {
+                                                     @RequestBody CategoryDto categoryDto) throws NoSuchFieldException, IllegalAccessException {
         CategoryDto updatedCategory = iCategoryService.updateCategory(categoryId , categoryDto);
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
