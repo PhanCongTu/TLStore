@@ -4,6 +4,7 @@ import com.example.tlstore.utils.Role;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -33,7 +34,10 @@ public class User implements Serializable {
     @Column(length = 10)
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Email
+    private String email;
+
+    @Column
     private Date createAt= new Date(new java.util.Date().getTime());
 
     @Column
