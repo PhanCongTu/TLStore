@@ -17,14 +17,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/Category")
-
 public class CategoryController {
     @Autowired
     ICategoryService iCategoryService;
 
 
     @GetMapping("")
-    @ApiOperation(value = "Get user by ID", position = 1)
+    @ApiOperation(value = "Get all category")
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         List<CategoryDto> listCategory = iCategoryService.getAllCategories();
         if (listCategory.isEmpty()) {
@@ -42,11 +41,13 @@ public class CategoryController {
 //    }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Get category by id")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable("id") long id) {
         CategoryDto category = iCategoryService.getCategoryById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Create new category")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto) {
         CategoryDto savedCategory = iCategoryService.createCategory(categoryDto);
@@ -60,6 +61,7 @@ public class CategoryController {
 //        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
 //    }
 
+    @ApiOperation(value = "Update category by id (Update only the fields you want to change)")
     @PatchMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDto> updateCategory(@PathVariable("id") Long categoryId,
                                                      @RequestBody CategoryDto categoryDto) throws NoSuchFieldException, IllegalAccessException {
@@ -67,11 +69,14 @@ public class CategoryController {
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Delete category by id")
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteCategory(@PathVariable("id") Long categoryId){
         iCategoryService.deleteCategory(categoryId);
         return new ResponseEntity<>("Category successfully deleted !!", HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Search category by name")
     @GetMapping("/search/{name}")
     public ResponseEntity<List<CategoryDto>> searchByName(@RequestParam("name") String name){
         List<CategoryDto> categoryDtos = iCategoryService.searchByName(name);

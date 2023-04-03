@@ -1,13 +1,15 @@
 package com.example.tlstore.entities;
 
 import com.example.tlstore.utils.Role;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,7 +29,7 @@ public class User implements Serializable {
     private String userName;
 
     @Column(nullable = false)
-    private String passWord;
+    private String password;
 
     private String avatar;
 
@@ -38,14 +40,16 @@ public class User implements Serializable {
     private String email;
 
     @Column
+    private Boolean isActive = true;
+
+    @Column
     private Date createAt= new Date(new java.util.Date().getTime());
 
     @Column
     private Date updateAt= new Date(new java.util.Date().getTime());
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    Collection<Role> roles;
 
     @OneToMany(
             mappedBy = "user",
@@ -58,4 +62,5 @@ public class User implements Serializable {
             cascade = CascadeType.ALL
     )
     private Collection<Order> orders;
+
 }
