@@ -1,7 +1,7 @@
 # TLStore
 
 Clone project :
-  'git clone https://github.com/PhanCongTu/TLStore.git'
+  `git clone https://github.com/PhanCongTu/TLStore.git`
   
 Update project :
   git add .
