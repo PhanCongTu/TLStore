@@ -14,6 +14,8 @@ public interface IUserService {
 
     UserDto getUserById(Long UserId);
 
+    UserDto getUserByUsername(String username);
+
     UserDto createUser(UserDto userDto);
 
     // Cập nhật lại User (chỉ cập nhật những thuộc tính muốn thay đổi)

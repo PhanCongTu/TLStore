@@ -1,6 +1,5 @@
 package com.example.tlstore.services.impl;
 
-import com.example.tlstore.dtos.Login;
 import com.example.tlstore.dtos.UserDto;
 import com.example.tlstore.dtos.UserPagination;
 import com.example.tlstore.entities.User;
@@ -73,6 +72,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public UserDto getUserByUsername(String username) {
+        User UserOp = userRepository.findByUserName(username);
+        if (UserOp==null)
+            throw new NotFoundException("Cant find User!");
+        return modelMapper.map(UserOp, UserDto.class);
+    }
+
+    @Override
     public UserDto createUser(UserDto userDto) {
         User User = modelMapper.map(userDto, User.class);
         if (userDto.getRoles() == null){
@@ -80,6 +87,7 @@ public class UserServiceImpl implements IUserService {
             roles.add(Role.ROLE_USER);
             User.setRoles(roles);
         }
+        User.setIsActive(true);
         User savedUser = userRepository.save(User);
         UserDto saveUserDto = modelMapper.map(savedUser, UserDto.class);
         return saveUserDto;

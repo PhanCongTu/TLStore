@@ -46,9 +46,16 @@ public class UserController{
         return new ResponseEntity<>(User, HttpStatus.OK);
     }
 
+    @GetMapping("/check/{username}")
+    @ApiOperation(value = "Kiểm tra Username đã tồn tại hay chưa")
+    public ResponseEntity<UserDto> checkExistByUsername(@PathVariable("username") String username) {
+        UserDto User = iUserService.getUserByUsername(username.trim());
+        return new ResponseEntity<>(User, HttpStatus.OK);
+    }
+
     @ApiOperation(value = "Create new User")
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(UserDto userDto) {
         UserDto savedUser = iUserService.createUser(userDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -76,8 +83,8 @@ public class UserController{
     }
 
     @ApiOperation(value = "Login by username & password")
-    @PostMapping("/login")
-    public ResponseEntity<UserDto> login(@RequestBody Login login){
+    @PostMapping(value = "/login")
+    public ResponseEntity<UserDto> login(Login login){
         UserDto userDto =iUserService.getUserByUserNameAndPassword(login.getUserName(), login.getPassword());
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }

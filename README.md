@@ -1,9 +1,13 @@
 # TLStore
 
-Clone project :
+## Clone project :
   `git clone https://github.com/PhanCongTu/TLStore.git`
   
-Update project :
-  git add .
-  git commit -m '...'
-  git pull
+=> Vào file application.properties đổi `username` và `password` của `datasource`\
+Tạo schema `tlstore` trong MySQL
+
+## Update project :
+
+  `git add .`\
+  `git commit -m '...'`\
+  `git pull`

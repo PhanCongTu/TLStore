@@ -11,4 +11,5 @@ import java.util.Collection;
 public interface UserRepository extends JpaRepository<User, Long> {
 //    User findByUserNameAndPasswordAndRoles(String userName, String password, Collection<Role> roles);
     User findByUserNameAndPassword(String userName, String password);
+    User findByUserName(String userName);
 }
