@@ -1,6 +1,7 @@
 package com.example.tlstore.controllers;
 
 import com.example.tlstore.dtos.Login;
+import com.example.tlstore.dtos.SignUp;
 import com.example.tlstore.dtos.UserDto;
 import com.example.tlstore.exceptions.NotFoundException;
 import com.example.tlstore.repositories.UserRepository;
@@ -55,8 +56,8 @@ public class UserController{
 
     @ApiOperation(value = "Create new User")
     @PostMapping
-    public ResponseEntity<UserDto> createUser(UserDto userDto) {
-        UserDto savedUser = iUserService.createUser(userDto);
+    public ResponseEntity<UserDto> createUser(SignUp signUp) {
+        UserDto savedUser = iUserService.createUser(signUp);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 

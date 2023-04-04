@@ -1,21 +1,15 @@
 package com.example.tlstore.dtos;
 
-import com.example.tlstore.entities.Cart;
-import com.example.tlstore.utils.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Collection;
-import java.util.List;
-
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-
+public class SignUp {
     private long id;
 
     private String name;
@@ -24,15 +18,7 @@ public class UserDto {
 
     private String password;
 
-    private String avatar;
-
     private String phoneNumber;
 
     private String email;
-
-    private List<Role> roles;
-
-    private Boolean isActive;
-
-//    private List<CartDto> carts;
 }
