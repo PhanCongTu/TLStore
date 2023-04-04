@@ -192,7 +192,7 @@ public class ProductServiceImpl implements IProductService {
             ProductDtos.add(ProductDto);
         }
         if (ProductDtos.isEmpty()) {
-            throw new ResponseStatusException(NOT_FOUND, "Dont not find any product");
+            throw new ResponseStatusException(NOT_FOUND, "Do not find any product");
         }
         return ProductDtos;
     }
@@ -206,7 +206,7 @@ public class ProductServiceImpl implements IProductService {
             ProductDtos.add(ProductDto);
         }
         if (ProductDtos.isEmpty()) {
-            throw new ResponseStatusException(NOT_FOUND, "Dont not find any product");
+            throw new ResponseStatusException(NOT_FOUND, "Do not find any product");
         }
         return ProductDtos;
     }

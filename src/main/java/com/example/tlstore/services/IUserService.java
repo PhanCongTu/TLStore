@@ -1,6 +1,7 @@
 package com.example.tlstore.services;
 
 import com.example.tlstore.dtos.Login;
+import com.example.tlstore.dtos.SignUp;
 import com.example.tlstore.dtos.UserDto;
 import com.example.tlstore.dtos.UserPagination;
 
@@ -16,7 +17,7 @@ public interface IUserService {
 
     UserDto getUserByUsername(String username);
 
-    UserDto createUser(UserDto userDto);
+    UserDto createUser(SignUp signUp);
 
     // Cập nhật lại User (chỉ cập nhật những thuộc tính muốn thay đổi)
     UserDto patchUser(Long id, Map<Object, Object> UserDto);
