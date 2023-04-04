@@ -182,5 +182,32 @@ public class ProductServiceImpl implements IProductService {
         }
         return ProductDtos;
     }
-
+    @Override
+    public List<ProductDto> getTop10ProductBySold() {
+        List<Product> Products = productRepository.findTop10ByOrderBySoldDesc();
+        List<ProductDto> ProductDtos = new ArrayList<>();
+        for (Product Product : Products
+        ) {
+            ProductDto ProductDto = modelMapper.map(Product, ProductDto.class);
+            ProductDtos.add(ProductDto);
+        }
+        if (ProductDtos.isEmpty()) {
+            throw new ResponseStatusException(NOT_FOUND, "Dont not find any product");
+        }
+        return ProductDtos;
+    }
+    @Override
+    public List<ProductDto> getTop10NewProducts() {
+        List<Product> Products = productRepository.findTop10ByOrderByCreateAtDesc();
+        List<ProductDto> ProductDtos = new ArrayList<>();
+        for (Product Product : Products
+        ) {
+            ProductDto ProductDto = modelMapper.map(Product, ProductDto.class);
+            ProductDtos.add(ProductDto);
+        }
+        if (ProductDtos.isEmpty()) {
+            throw new ResponseStatusException(NOT_FOUND, "Dont not find any product");
+        }
+        return ProductDtos;
+    }
 }
