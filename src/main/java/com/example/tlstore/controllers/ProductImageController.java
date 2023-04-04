@@ -1,16 +1,16 @@
 package com.example.tlstore.controllers;
 
 import com.example.tlstore.dtos.CategoryDto;
+import com.example.tlstore.dtos.Login;
 import com.example.tlstore.dtos.ProductImageDto;
+import com.example.tlstore.dtos.UserDto;
 import com.example.tlstore.services.IProductImageService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +28,18 @@ public class ProductImageController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(listImages, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductImageDto> addImage(ProductImageDto productImageDto, Long productId){
+        ProductImageDto newImage = iProductImageService.addProductImage(productImageDto, productId);
+        return new ResponseEntity<>(newImage, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Delete ProductImage by id")
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteProductImage(@PathVariable("id") Long pImageId){
+        iProductImageService.deleteProductImage(pImageId);
+        return new ResponseEntity<>("Product Image deleted successfully !!", HttpStatus.OK);
     }
 }

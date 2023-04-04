@@ -19,22 +19,14 @@ public class Cart implements Serializable {
     private long id;
 
     @Column(nullable = false)
+    private int quantity;
+
+    @Column(nullable = false, updatable = false)
     private Date createAt = new Date(new java.util.Date().getTime());
 
-    @OneToMany(
-            mappedBy = "cart",
-            cascade = CascadeType.ALL
-    )
-    private List<CartItem> cartItems;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-
-    public double getTotalPrice() {
-        double total = 0;
-        for (CartItem cartItem : this.cartItems) {
-            total += (cartItem.getQuantity() * cartItem.getProduct().getPrice());
-        }
-        return total;
-    }
 }

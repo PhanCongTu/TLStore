@@ -29,4 +29,8 @@ public interface IProductService {
     List<ProductDto> searchByProductName(String name);
 
     List<ProductDto> searchByProductNameAndCategory(String name, Category category);
+
+    List<ProductDto> getTop10ProductBySold();
+
+    List<ProductDto> getTop10NewProducts();
 }
