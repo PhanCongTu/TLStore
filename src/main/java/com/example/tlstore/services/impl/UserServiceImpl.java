@@ -83,7 +83,7 @@ public class UserServiceImpl implements IUserService {
     public UserDto createUser(UserDto userDto) {
         User User = modelMapper.map(userDto, User.class);
         if (userDto.getRoles() == null){
-            Collection<Role> roles = new ArrayList<>();
+            List<Role> roles = new ArrayList<>();
             roles.add(Role.ROLE_USER);
             User.setRoles(roles);
         }

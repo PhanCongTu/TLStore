@@ -4,7 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import java.util.Date;
 
 @Entity
@@ -25,7 +25,7 @@ public class Cart implements Serializable {
             mappedBy = "cart",
             cascade = CascadeType.ALL
     )
-    private Collection<CartItem> cartItems;
+    private List<CartItem> cartItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;

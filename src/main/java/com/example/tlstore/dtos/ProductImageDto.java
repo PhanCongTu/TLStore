@@ -13,6 +13,4 @@ public class ProductImageDto {
     private long id;
 
     private String image;
-
-    private Product product;
 }

@@ -5,8 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -49,18 +49,18 @@ public class Product implements Serializable {
             mappedBy = "product",
             cascade = CascadeType.ALL
     )
-    private Collection<ProductImage> productImages;
+    private List<ProductImage> productImages;
 
     @OneToMany(
             mappedBy = "product",
             cascade = CascadeType.ALL
     )
-    private Collection<CartItem> cartItems;
+    private List<CartItem> cartItems;
 
     @OneToMany(
             mappedBy = "product",
             cascade = CascadeType.ALL
     )
-    private Collection<OrderItem> orderItems;
+    private List<OrderItem> orderItems;
 
 }

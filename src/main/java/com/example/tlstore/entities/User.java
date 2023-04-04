@@ -6,8 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -49,18 +47,18 @@ public class User implements Serializable {
     private Date updateAt= new Date(new java.util.Date().getTime());
 
     @ElementCollection(fetch = FetchType.EAGER)
-    Collection<Role> roles;
+    List<Role> roles;
 
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL
     )
-    private Collection<Cart> carts;
+    private List<Cart> carts;
 
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL
     )
-    private Collection<Order> orders;
+    private List<Order> orders;
 
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Collection;
+import java.util.List;
 
 @Setter
 @Getter
@@ -28,7 +29,7 @@ public class UserDto {
 
     private String email;
 
-    private Collection<Role> roles;
+    private List<Role> roles;
 
     private Boolean isActive;
 }

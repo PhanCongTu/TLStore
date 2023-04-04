@@ -4,7 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import java.util.Date;
 
 @Entity
@@ -35,5 +35,5 @@ public class Order implements Serializable {
             mappedBy = "order",
             cascade = CascadeType.ALL
     )
-    private Collection<OrderItem> orderItems;
+    private List<OrderItem> orderItems;
 }

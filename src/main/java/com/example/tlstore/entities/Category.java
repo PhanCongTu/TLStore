@@ -7,7 +7,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Date;
 import java.util.List;
 
@@ -40,5 +40,5 @@ public class Category implements Serializable {
             mappedBy = "category",
             cascade = CascadeType.ALL
     )
-    private Collection<Product> products ;
+    private List<Product> products ;
 }
