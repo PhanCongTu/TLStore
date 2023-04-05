@@ -31,6 +31,7 @@ public interface IProductService {
     List<ProductDto> searchByProductNameAndCategory(String name, Category category);
 
     List<ProductDto> getTop10ProductBySold();
+    List<ProductDto> getProductByCategoryId(long id);
 
     List<ProductDto> getTop10NewProducts();
 }
