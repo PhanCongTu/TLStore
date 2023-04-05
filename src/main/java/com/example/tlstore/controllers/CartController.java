@@ -5,6 +5,7 @@ import com.example.tlstore.dtos.CategoryDto;
 import com.example.tlstore.dtos.ProductDto;
 import com.example.tlstore.entities.Cart;
 import com.example.tlstore.entities.Product;
+import com.example.tlstore.repositories.CartRepository;
 import com.example.tlstore.services.ICartService;
 import com.example.tlstore.services.IProductService;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +24,8 @@ public class CartController {
     ICartService iCartService;
     @Autowired
     IProductService iproductService;
+    @Autowired
+    CartRepository cartRepository;
 
     @GetMapping("")
     @ApiOperation(value = "Get all Cart of User")
@@ -44,4 +47,25 @@ public class CartController {
         CartDto savedCartDto = iCartService.addCart(newCartDto, userId);
         return new ResponseEntity<>(savedCartDto, HttpStatus.CREATED);
     }
+
+    @ApiOperation(value = "Update Cart (Update quantity of product in cart)")
+    @PutMapping("/update")
+    public ResponseEntity<CartDto> updateCategory(Long cartId, int quantity) {
+        CartDto newCartDto = iCartService.updateCart(cartId,quantity);
+        return new ResponseEntity<>(newCartDto, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Update Cart (Update quantity of product in cart)")
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteCategory(Long cartId) {
+        cartRepository.deleteById(cartId);
+        return new ResponseEntity<>("Deleted successfully!!", HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Lấy sổ lượng cart của user")
+    @GetMapping("/count/{userId}")
+    public ResponseEntity<Integer> countAllCart(Long userId){
+        return new ResponseEntity<>(iCartService.countAllCartByUserId(userId), HttpStatus.OK);
+    }
+
 }
