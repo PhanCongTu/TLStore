@@ -55,7 +55,7 @@ public class CartController {
         return new ResponseEntity<>(newCartDto, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Update Cart (Update quantity of product in cart)")
+    @ApiOperation(value = "Deleted Cart (Deleted quantity of product in cart)")
     @DeleteMapping("")
     public ResponseEntity<String> deleteCategory(Long cartId) {
         cartRepository.deleteById(cartId);
