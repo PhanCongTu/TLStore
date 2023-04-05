@@ -3,6 +3,7 @@ package com.example.tlstore.services.impl;
 import com.example.tlstore.dtos.OrderDto;
 import com.example.tlstore.entities.Order;
 import com.example.tlstore.repositories.OrderRepository;
+import com.example.tlstore.services.ICartService;
 import com.example.tlstore.services.IOrderService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrderServiceImpl implements IOrderService {
     private final OrderRepository orderRepository;
+    private final ICartService iCartService;
     private ModelMapper modelMapper;
 
     @Override
@@ -23,5 +25,14 @@ public class OrderServiceImpl implements IOrderService {
         return orders.stream()
                 .map((order) -> (modelMapper.map(order, OrderDto.class)))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderDto newOrder(OrderDto orderDto){
+        Order order = modelMapper.map(orderDto, Order.class);
+        Order savedOrder = orderRepository.save(order);
+        OrderDto saveCategoryDto = modelMapper.map(savedOrder, OrderDto.class);
+        return saveCategoryDto;
+
     }
 }

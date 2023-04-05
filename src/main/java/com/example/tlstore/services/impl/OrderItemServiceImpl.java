@@ -24,4 +24,12 @@ public class OrderItemServiceImpl implements IOrderItemService {
                 .map((oderItem) -> modelMapper.map(oderItem, OrderItemDto.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public OrderItemDto addOrderItem(OrderItem orderItem){
+//        OrderItem orderItem = modelMapper.map(orderItemDto, OrderItem.class);
+        OrderItem savedCategory = orderItemRepository.save(orderItem);
+        OrderItemDto saveOrderItemDto = modelMapper.map(savedCategory, OrderItemDto.class);
+        return saveOrderItemDto;
+    }
 }

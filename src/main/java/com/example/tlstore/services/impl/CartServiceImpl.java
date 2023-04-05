@@ -63,4 +63,9 @@ public class CartServiceImpl implements ICartService {
     public int countAllCartByUserId(Long userId){
         return cartRepository.countByUserId(userId);
     }
+
+    @Override
+    public void deleteCart(Long cartId){
+        cartRepository.deleteById(cartId);
+    }
 }

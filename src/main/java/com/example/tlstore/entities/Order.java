@@ -22,7 +22,7 @@ public class Order implements Serializable {
 
     private String phoneNumber;
 
-    private int status;
+    private int status = 0;
 
     private double total;
 
