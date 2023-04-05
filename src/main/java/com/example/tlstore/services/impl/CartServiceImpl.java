@@ -13,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,5 +57,10 @@ public class CartServiceImpl implements ICartService {
         cart.setQuantity(quantity);
         CartDto cartDto = modelMapper.map(cartRepository.save(cart), CartDto.class);
         return cartDto;
+    }
+
+    @Override
+    public int countAllCartByUserId(Long userId){
+        return cartRepository.countByUserId(userId);
     }
 }

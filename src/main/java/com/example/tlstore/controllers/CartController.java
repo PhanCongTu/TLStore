@@ -57,8 +57,15 @@ public class CartController {
 
     @ApiOperation(value = "Update Cart (Update quantity of product in cart)")
     @DeleteMapping("")
-    public ResponseEntity<String> updateCategory(Long cartId) {
+    public ResponseEntity<String> deleteCategory(Long cartId) {
         cartRepository.deleteById(cartId);
         return new ResponseEntity<>("Deleted successfully!!", HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Lấy sổ lượng cart của user")
+    @GetMapping("/count/{userId}")
+    public ResponseEntity<Integer> countAllCart(Long userId){
+        return new ResponseEntity<>(iCartService.countAllCartByUserId(userId), HttpStatus.OK);
+    }
+
 }

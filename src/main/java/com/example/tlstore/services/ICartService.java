@@ -14,4 +14,6 @@ public interface ICartService {
 
 
     CartDto updateCart(Long cartId, int quantity);
+
+    int countAllCartByUserId(Long userId);
 }
