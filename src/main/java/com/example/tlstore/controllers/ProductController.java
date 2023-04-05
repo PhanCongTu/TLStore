@@ -58,6 +58,14 @@ public class ProductController {
         ProductDto Product = iProductService.getProductById(id);
         return new ResponseEntity<>(Product, HttpStatus.OK);
     }
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<ProductDto>> geProductByCategory(@PathVariable("id")long id){
+        List<ProductDto> listProduct = iProductService.getProductByCategoryId(id);
+        if (listProduct.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listProduct, HttpStatus.OK);
+    }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
@@ -103,6 +111,11 @@ public class ProductController {
         return new ResponseEntity<>("Product successfully deleted !!", HttpStatus.OK);
     }
 
+    @GetMapping("/search/name")
+    public ResponseEntity<List<ProductDto>> searchByName_1(@RequestParam("name") String name) {
+        List<ProductDto> ProductDtos = iProductService.searchByProductName(name);
+        return new ResponseEntity<>(ProductDtos, HttpStatus.OK);
+    }
     @GetMapping("/search/{name}")
     public ResponseEntity<List<ProductDto>> searchByName(@RequestParam("name") String name) {
         List<ProductDto> ProductDtos = iProductService.searchByProductName(name);

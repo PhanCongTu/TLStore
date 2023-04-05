@@ -196,6 +196,8 @@ public class ProductServiceImpl implements IProductService {
         }
         return ProductDtos;
     }
+
+
     @Override
     public List<ProductDto> getTop10NewProducts() {
         List<Product> Products = productRepository.findTop10ByOrderByCreateAtDesc();
@@ -210,4 +212,19 @@ public class ProductServiceImpl implements IProductService {
         }
         return ProductDtos;
     }
+
+    @Override
+    public List<ProductDto> getProductByCategoryId(long category) {
+        List<Product> products = productRepository.findByCategoryId(category);
+        List<ProductDto> productDtos = new ArrayList<>();
+        for(Product product : products){
+            ProductDto productDto = modelMapper.map(product, ProductDto.class);
+            productDtos.add(productDto);
+        }
+        if (productDtos.isEmpty()) {
+            throw new ResponseStatusException(NOT_FOUND, "Do not find any product");
+        }
+        return productDtos;
+    }
+
 }
