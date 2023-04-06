@@ -1,17 +1,13 @@
 package com.example.tlstore.controllers;
 
 import com.example.tlstore.dtos.CartDto;
-import com.example.tlstore.dtos.CategoryDto;
 import com.example.tlstore.dtos.ProductDto;
-import com.example.tlstore.entities.Cart;
-import com.example.tlstore.entities.Product;
 import com.example.tlstore.repositories.CartRepository;
 import com.example.tlstore.services.ICartService;
 import com.example.tlstore.services.IProductService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +35,7 @@ public class CartController {
 
     @ApiOperation(value = "Add cart")
     @PostMapping
-    public ResponseEntity<CartDto> createCategory(Long productId, Long userId, int quantity) {
+    public ResponseEntity<CartDto> createCart(Long productId, Long userId, int quantity) {
         ProductDto productDto = iproductService.getProductById(productId);
         CartDto newCartDto = new CartDto();
         newCartDto.setQuantity(quantity);
@@ -50,7 +46,7 @@ public class CartController {
 
     @ApiOperation(value = "Update Cart (Update quantity of product in cart)")
     @PutMapping("/update")
-    public ResponseEntity<CartDto> updateCategory(Long cartId, int quantity) {
+    public ResponseEntity<CartDto> updateCart(Long cartId, int quantity) {
         CartDto newCartDto = iCartService.updateCart(cartId,quantity);
         return new ResponseEntity<>(newCartDto, HttpStatus.OK);
     }

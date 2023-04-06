@@ -34,25 +34,35 @@ public class CartServiceImpl implements ICartService {
     @Override
     public CartDto getCartById(Long cartId) {
         Cart cart = cartRepository.findById(cartId).orElse(null);
-        if (cart==null)
+        if (cart == null)
             throw new NotFoundException("Cant find category!");
         return modelMapper.map(cart, CartDto.class);
     }
 
     @Override
-    public CartDto addCart(CartDto cartDto, Long userId){
-    Cart cart = modelMapper.map(cartDto, Cart.class);
-    cart.setUser(modelMapper.map(iUserService.getUserById(userId), User.class));
-    CartDto savedCardDto = modelMapper.map(cartRepository.save(cart), CartDto.class);
+    public CartDto addCart(CartDto cartDto, Long userId) {
+        List<CartDto> cartDtos = getAllCartByUserId(userId);
+        int flag = cartDto.getQuantity();
+        for(CartDto cart : cartDtos){
+            if(cart.getProduct().getId() == cartDto.getProduct().getId()){
+                cartDto = cart;
+                cartDto.setQuantity(flag + cartDto.getQuantity());
+                break;
+            }
+        }
+        Cart cart = modelMapper.map(cartDto, Cart.class);
+        cart.setUser(modelMapper.map(iUserService.getUserById(userId), User.class));
+        CartDto savedCardDto = modelMapper.map(cartRepository.save(cart), CartDto.class);
         return savedCardDto;
     }
+
     @Override
-    public CartDto updateCart(Long cartId, int quantity){
+    public CartDto updateCart(Long cartId, int quantity) {
 //        Cart cart = modelMapper.map(cartDto, Cart.class);
 //        CartDto updatedCardDto = modelMapper.map(cartRepository.save(cart), CartDto.class);
 //        return updatedCardDto;
         Cart cart = cartRepository.findById(cartId).orElse(null);
-        if (cart==null) throw new NotFoundException("Cant find category!");
+        if (cart == null) throw new NotFoundException("Cant find category!");
 
         cart.setQuantity(quantity);
         CartDto cartDto = modelMapper.map(cartRepository.save(cart), CartDto.class);
@@ -60,12 +70,12 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
-    public int countAllCartByUserId(Long userId){
+    public int countAllCartByUserId(Long userId) {
         return cartRepository.countByUserId(userId);
     }
 
     @Override
-    public void deleteCart(Long cartId){
+    public void deleteCart(Long cartId) {
         cartRepository.deleteById(cartId);
     }
 }
