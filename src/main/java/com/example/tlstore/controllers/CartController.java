@@ -23,7 +23,16 @@ public class CartController {
     @Autowired
     CartRepository cartRepository;
 
-    @GetMapping("")
+    @GetMapping("/user/{id}")
+    @ApiOperation(value = "Get all Cart of User")
+    public ResponseEntity<List<CartDto>> getAllCart_1(@PathVariable("id") Long userId) {
+        List<CartDto> listCart = iCartService.getAllCartByUserId(userId);
+        if (listCart.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listCart, HttpStatus.OK);
+    }
+    @GetMapping("/user")
     @ApiOperation(value = "Get all Cart of User")
     public ResponseEntity<List<CartDto>> getAllCart(Long userId) {
         List<CartDto> listCart = iCartService.getAllCartByUserId(userId);
