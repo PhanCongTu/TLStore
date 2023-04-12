@@ -5,6 +5,7 @@ import com.example.tlstore.dtos.ProductDto;
 import com.example.tlstore.repositories.CartRepository;
 import com.example.tlstore.services.ICartService;
 import com.example.tlstore.services.IProductService;
+import com.google.gson.Gson;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,14 +58,19 @@ public class CartController {
     @PutMapping("/update")
     public ResponseEntity<CartDto> updateCart(Long cartId, int quantity) {
         CartDto newCartDto = iCartService.updateCart(cartId,quantity);
+        System.out.println(cartId+ "---"+ quantity);
         return new ResponseEntity<>(newCartDto, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Deleted Cart (Deleted quantity of product in cart)")
     @DeleteMapping("")
-    public ResponseEntity<String> deleteCategory(Long cartId) {
+    public ResponseEntity<String> deleteCart(Long cartId) {
         cartRepository.deleteById(cartId);
-        return new ResponseEntity<>("Deleted successfully!!", HttpStatus.OK);
+        System.out.println(cartId);
+        String msg = "Deleted successfully!!";
+//        return new ResponseEntity<>(msg, HttpStatus.OK);
+        final Gson gson = new Gson();
+        return new ResponseEntity<>(gson.toJson(msg), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Lấy sổ lượng cart của user")
