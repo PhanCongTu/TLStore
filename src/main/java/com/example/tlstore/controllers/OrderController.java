@@ -1,16 +1,10 @@
 package com.example.tlstore.controllers;
 
-import com.example.tlstore.dtos.CartDto;
-import com.example.tlstore.dtos.OrderDto;
-import com.example.tlstore.dtos.OrderItemDto;
-import com.example.tlstore.dtos.UserDto;
+import com.example.tlstore.dtos.*;
 import com.example.tlstore.entities.Order;
 import com.example.tlstore.entities.OrderItem;
 import com.example.tlstore.entities.Product;
-import com.example.tlstore.services.ICartService;
-import com.example.tlstore.services.IOrderItemService;
-import com.example.tlstore.services.IOrderService;
-import com.example.tlstore.services.IUserService;
+import com.example.tlstore.services.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -37,6 +31,8 @@ public class OrderController {
 
     @Autowired
     IOrderItemService iOrderItemService;
+    @Autowired
+    IProductService iProductService;
     final ModelMapper modelMapper;
 
     public OrderController(ModelMapper modelMapper) {
@@ -62,9 +58,9 @@ public class OrderController {
     public ResponseEntity<OrderDto> addToOrder(@RequestParam("userId") Long userId,
                                                @RequestParam("address") String address,
                                                @RequestParam("phoneNumber") String phoneNumber,
-                                               @RequestParam(value = "idCarts" ,required = false, defaultValue = "") List<Long> idCarts ) {
+                                               @RequestParam(value = "idCarts", required = false, defaultValue = "") List<Long> idCarts) {
         OrderDto orderDto = new OrderDto();
-        double total = 0;
+        int total = 0;
         List<CartDto> cartDtos = new ArrayList<>();
         if (idCarts.isEmpty()) {
             System.out.println("List empty");
@@ -79,14 +75,14 @@ public class OrderController {
                 }
             }
         }
-        for (CartDto cartDto: cartDtos
-             ) {
-            total += cartDto.getProduct().getPrice()*cartDto.getQuantity();
-        }
+
+//        for (CartDto cartDto: cartDtos
+//             ) {
+//            total += cartDto.getProduct().getPrice()*cartDto.getQuantity();
+//        }
 
         UserDto userDto = iUserService.getUserById(userId);
         List<OrderItemDto> orderItemDtos = new ArrayList<>();
-
 
         orderDto.setUser(userDto);
         orderDto.setTotal(total);
@@ -95,20 +91,43 @@ public class OrderController {
 
 
         OrderDto newOrder = iOrderService.newOrder(orderDto);
+        int flag = 0;
+//        if (cartDtos != null || !cartDtos.isEmpty()) {
+            for (CartDto cartDto : cartDtos) {
+                ProductDto productDto = iProductService.getProductById(cartDto.getProduct().getId());
+                if (cartDto.getQuantity() <= productDto.getQuantity()) {
+                    total += cartDto.getQuantity() * cartDto.getProduct().getPrice();
 
-        for (CartDto cartDto : cartDtos
-        ) {
-            total += cartDto.getQuantity() * cartDto.getProduct().getPrice();
-            OrderItem newOne = modelMapper.map(cartDto, OrderItem.class);
-            newOne.setOrder(modelMapper.map(newOrder, Order.class));
-            newOne.setProduct(modelMapper.map(cartDto.getProduct(), Product.class));
-            OrderItemDto newNewOne = iOrderItemService.addOrderItem(newOne);
-            orderItemDtos.add(newNewOne);
-            iCartService.deleteCart(cartDto.getId());
-        }
+                    productDto.setQuantity(productDto.getQuantity() - cartDto.getQuantity());
+                    productDto.setSold(productDto.getSold() + cartDto.getQuantity());
 
+                    OrderItem newOne = modelMapper.map(cartDto, OrderItem.class);
+                    newOne.setOrder(modelMapper.map(newOrder, Order.class));
+                    newOne.setProduct(modelMapper.map(cartDto.getProduct(), Product.class));
+                    OrderItemDto newNewOne = iOrderItemService.addOrderItem(newOne);
+                    orderItemDtos.add(newNewOne);
+                    iCartService.deleteCart(cartDto.getId());
+                    iProductService.updateProduct(productDto.getId(), productDto);
 
-        newOrder.setOrderItems(orderItemDtos);
+                    flag++;
+                }
+            }
+            newOrder.setOrderItems(orderItemDtos);
+            newOrder.setTotal(total);
+            iOrderService.newOrder(newOrder);
+//        } else {
+            Order order = new Order();
+            order.setId(newOrder.getId());
+            if (flag == 0) {
+                iOrderService.deleteOrder(order);
+            }
+//        }
+
+//        newOrder.
+
+//        if (flag == 0){
+//            iOrderService.deleteOrder(newOrder.getId());
+//        }
         return new ResponseEntity<>(newOrder, HttpStatus.OK);
     }
 

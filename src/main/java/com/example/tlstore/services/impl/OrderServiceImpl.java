@@ -35,4 +35,10 @@ public class OrderServiceImpl implements IOrderService {
         return saveCategoryDto;
 
     }
+
+    @Override
+    public void deleteOrder(Order order) {
+        System.out.println(order.getId());
+        orderRepository.delete(order);
+    }
 }
