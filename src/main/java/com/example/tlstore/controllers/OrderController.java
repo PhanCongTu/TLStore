@@ -87,6 +87,7 @@ public class OrderController {
         orderDto.setUser(userDto);
         orderDto.setTotal(total);
         orderDto.setAddress(address);
+//        orderDto.setOrderItems(orderItemDtos);
         orderDto.setPhoneNumber(phoneNumber);
 
 
@@ -96,23 +97,27 @@ public class OrderController {
             for (CartDto cartDto : cartDtos) {
                 ProductDto productDto = iProductService.getProductById(cartDto.getProduct().getId());
                 if (cartDto.getQuantity() <= productDto.getQuantity()) {
-                    total += cartDto.getQuantity() * cartDto.getProduct().getPrice();
+                    total += cartDto.getQuantity() * productDto.getPrice();
+
+                    OrderItem newOne = modelMapper.map(cartDto, OrderItem.class);
+                    newOne.setOrder(modelMapper.map(newOrder, Order.class));
+//                    newOne.setProduct(modelMapper.map(cartDto.getProduct(), Product.class));
+                    newOne.setProduct(modelMapper.map(productDto, Product.class));
+                    OrderItemDto newNewOne = iOrderItemService.addOrderItem(newOne);
+                    orderItemDtos.add(newNewOne);
+
 
                     productDto.setQuantity(productDto.getQuantity() - cartDto.getQuantity());
                     productDto.setSold(productDto.getSold() + cartDto.getQuantity());
 
-                    OrderItem newOne = modelMapper.map(cartDto, OrderItem.class);
-                    newOne.setOrder(modelMapper.map(newOrder, Order.class));
-                    newOne.setProduct(modelMapper.map(cartDto.getProduct(), Product.class));
-                    OrderItemDto newNewOne = iOrderItemService.addOrderItem(newOne);
-                    orderItemDtos.add(newNewOne);
-                    iCartService.deleteCart(cartDto.getId());
                     iProductService.updateProduct(productDto.getId(), productDto);
+
+                    iCartService.deleteCart(cartDto.getId());
 
                     flag++;
                 }
             }
-            newOrder.setOrderItems(orderItemDtos);
+//            newOrder.setOrderItems(orderItemDtos);
             newOrder.setTotal(total);
             iOrderService.newOrder(newOrder);
 //        } else {
