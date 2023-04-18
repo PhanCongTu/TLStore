@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -26,5 +27,6 @@ public class OrderDto {
 
     private UserDto user;
 
+    private Date createAt;
     private List<OrderItemDto> orderItems;
 }

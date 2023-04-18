@@ -39,7 +39,7 @@ public class OrderController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id")
     public ResponseEntity<List<OrderDto>> getAllCart(Long userId) {
         List<OrderDto> orderDtos = iOrderService.getAllOrder(userId);
         return new ResponseEntity<>(orderDtos, HttpStatus.OK);
@@ -125,6 +125,7 @@ public class OrderController {
             order.setId(newOrder.getId());
             if (flag == 0) {
                 iOrderService.deleteOrder(order);
+                return new ResponseEntity<>(newOrder, HttpStatus.NOT_ACCEPTABLE);
             }
 //        }
 
