@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public OrderDto newOrder(OrderDto orderDto){
         Order order = modelMapper.map(orderDto, Order.class);
+        order.setCreateAt(new Date(new java.util.Date().getTime()));
         Order savedOrder = orderRepository.save(order);
         OrderDto saveCategoryDto = modelMapper.map(savedOrder, OrderDto.class);
         return saveCategoryDto;
