@@ -2,7 +2,10 @@ package com.example.tlstore.controllers;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.tlstore.dtos.UserDto;
 import com.example.tlstore.exceptions.NotFoundException;
+import com.example.tlstore.services.IUserService;
+import com.google.gson.Gson;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -36,11 +39,17 @@ import java.util.concurrent.CompletableFuture;
 public class FileController {
     @Autowired
     private Cloudinary cloudinary;
+    @Autowired
+    IUserService iUserService;
 
     @PostMapping(value = "/files/cloud/upload", consumes = "multipart/form-data")
-    public ResponseEntity<String> uploadFileCloud(@RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> uploadFileCloud(long id, MultipartFile file) throws IOException, NoSuchFieldException, IllegalAccessException {
         // Kiểm tra nếu file là ảnh
+
         boolean isImage = file.getContentType().startsWith("image/");
+        UserDto user = iUserService.getUserById(id);
+        final Gson gson = new Gson();
+
         if (isImage) {
             // Đọc dữ liệu của file vào một mảng byte
             byte[] fileData = file.getBytes();
@@ -68,12 +77,16 @@ public class FileController {
             Map<String, Object> uploadResult = cloudinary.uploader().upload(fileData, ObjectUtils.emptyMap());
             // Trả về URL của file đã upload
             String fileUrl = (String) uploadResult.get("url");
-            return new ResponseEntity<>(fileUrl, HttpStatus.OK);
+            user.setAvatar(fileUrl);
+            iUserService.updateUser(user.getId(), user);
+            return new ResponseEntity<>(gson.toJson(fileUrl), HttpStatus.OK);
         } else {
             // Trường hợp file không phải là ảnh, upload file thẳng lên Cloudinary
             Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
             String fileUrl = (String) uploadResult.get("url");
-            return new ResponseEntity<>(fileUrl, HttpStatus.OK);
+            user.setAvatar(fileUrl);
+            iUserService.updateUser(user.getId(), user);
+            return new ResponseEntity<>(gson.toJson(fileUrl), HttpStatus.OK);
         }
     }
 
