@@ -43,11 +43,10 @@ public class FileController {
     IUserService iUserService;
 
     @PostMapping(value = "/files/cloud/upload", consumes = "multipart/form-data")
-    public ResponseEntity<String> uploadFileCloud(long id, MultipartFile file) throws IOException, NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<String> uploadFileCloud(MultipartFile file) throws IOException, NoSuchFieldException, IllegalAccessException {
         // Kiểm tra nếu file là ảnh
 
         boolean isImage = file.getContentType().startsWith("image/");
-        UserDto user = iUserService.getUserById(id);
         final Gson gson = new Gson();
 
         if (isImage) {
@@ -77,15 +76,11 @@ public class FileController {
             Map<String, Object> uploadResult = cloudinary.uploader().upload(fileData, ObjectUtils.emptyMap());
             // Trả về URL của file đã upload
             String fileUrl = (String) uploadResult.get("url");
-            user.setAvatar(fileUrl);
-            iUserService.updateUser(user.getId(), user);
             return new ResponseEntity<>(gson.toJson(fileUrl), HttpStatus.OK);
         } else {
             // Trường hợp file không phải là ảnh, upload file thẳng lên Cloudinary
             Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
             String fileUrl = (String) uploadResult.get("url");
-            user.setAvatar(fileUrl);
-            iUserService.updateUser(user.getId(), user);
             return new ResponseEntity<>(gson.toJson(fileUrl), HttpStatus.OK);
         }
     }
