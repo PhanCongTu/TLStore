@@ -1,13 +1,16 @@
 package com.example.tlstore.controllers;
 
+import com.example.tlstore.Model.Mail;
 import com.example.tlstore.dtos.Login;
 import com.example.tlstore.dtos.SignUp;
 import com.example.tlstore.dtos.UserDto;
 import com.example.tlstore.exceptions.NotFoundException;
 import com.example.tlstore.repositories.UserRepository;
+import com.example.tlstore.services.IMailService;
 import com.example.tlstore.services.IUserService;
 import com.google.gson.Gson;
 import io.swagger.annotations.ApiOperation;
+import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +26,9 @@ public class UserController {
     IUserService iUserService;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    IMailService iMailService;
 
     @GetMapping("")
     @ApiOperation(value = "Get all User")
@@ -93,7 +99,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/change-password", produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<String> changePassword(UserDto userDto,String newPass) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<String> changePassword(UserDto userDto, String newPass) throws NoSuchFieldException, IllegalAccessException {
 //        if(userDto != null){
         final Gson gson = new Gson();
         UserDto user = iUserService.getUserById(userDto.getId());
@@ -104,7 +110,38 @@ public class UserController {
                 user.setPassword(newPass);
                 iUserService.updateUser(user.getId(), user);
             }
-        }else{
+        } else {
+            return new ResponseEntity<>(gson.toJson("Not found User information"), HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        }
+        return new ResponseEntity<>(gson.toJson("Update Password Successful"), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/forget-password", produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<String> getMailCodeFromUsername(String username) {
+        final Gson gson = new Gson();
+        UserDto user = iUserService.getUserByUsername(username.trim());
+        if (user != null) {
+            int code = (int) Math.floor(((Math.random() * 8999) + 1000));
+            Mail mail = new Mail();
+            mail.setMailFrom("thomsonbel12@gmail.com");
+            mail.setMailTo(user.getEmail());
+            mail.setMailSubject("Reset your password - TLStore: ");
+            mail.setMailContent("Your code is: " + code + "\nPlease enter the code above to reset your Password!!");
+            iMailService.sendEmail(mail);
+            return new ResponseEntity<String>(gson.toJson(code), HttpStatus.OK);
+        }
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/reset-password", produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<String> resetPass(UserDto userDto, String newPass) throws NoSuchFieldException, IllegalAccessException {
+//        if(userDto != null){
+        final Gson gson = new Gson();
+        UserDto user = iUserService.getUserById(userDto.getId());
+        if (user != null) {
+            user.setPassword(newPass);
+            iUserService.updateUser(user.getId(), user);
+        } else {
             return new ResponseEntity<>(gson.toJson("Not found User information"), HttpStatus.NON_AUTHORITATIVE_INFORMATION);
         }
         return new ResponseEntity<>(gson.toJson("Update Password Successful"), HttpStatus.OK);
