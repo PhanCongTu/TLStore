@@ -45,8 +45,7 @@ public class MaiServiceImp implements IMailService {
         mail.setMailFrom("phancongtu25032002@gmail.com");
         mail.setMailTo(userDto.getEmail());
         mail.setMailSubject("TL Store - Bạn đặt hàng thành công");
-        mail.setMailContent("Tổng số tiền của đơn hàng của bạn là: " + orderDto.getTotal() );
-        String Content = "Tổng số tiền của đơn hàng của bạn là: " + orderDto.getTotal() +"\n";
+        String Content = "Tổng số tiền của đơn hàng của bạn là: $" + orderDto.getTotal() +"\n";
         int index = 1;
         for (OrderItemDto OID : orderItemDtos) {
             Content += index +". Tên sản phẩm: " +  OID.getProduct().getProductName() +"\n";
