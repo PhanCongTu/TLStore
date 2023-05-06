@@ -1,5 +1,6 @@
 package com.example.tlstore.controllers;
 
+import com.example.tlstore.Model.Mail;
 import com.example.tlstore.dtos.*;
 import com.example.tlstore.entities.Order;
 import com.example.tlstore.entities.OrderItem;
@@ -10,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -33,6 +38,8 @@ public class OrderController {
     IOrderItemService iOrderItemService;
     @Autowired
     IProductService iProductService;
+    @Autowired
+    IMailService iMailService;
     final ModelMapper modelMapper;
 
     public OrderController(ModelMapper modelMapper) {
@@ -93,7 +100,6 @@ public class OrderController {
 
         OrderDto newOrder = iOrderService.newOrder(orderDto);
         int flag = 0;
-//        if (cartDtos != null || !cartDtos.isEmpty()) {
             for (CartDto cartDto : cartDtos) {
                 ProductDto productDto = iProductService.getProductById(cartDto.getProduct().getId());
                 if (cartDto.getQuantity() <= productDto.getQuantity()) {
@@ -101,7 +107,6 @@ public class OrderController {
 
                     OrderItem newOne = modelMapper.map(cartDto, OrderItem.class);
                     newOne.setOrder(modelMapper.map(newOrder, Order.class));
-//                    newOne.setProduct(modelMapper.map(cartDto.getProduct(), Product.class));
                     newOne.setProduct(modelMapper.map(productDto, Product.class));
                     OrderItemDto newNewOne = iOrderItemService.addOrderItem(newOne);
                     orderItemDtos.add(newNewOne);
@@ -117,24 +122,19 @@ public class OrderController {
                     flag++;
                 }
             }
-//            newOrder.setOrderItems(orderItemDtos);
             newOrder.setTotal(total);
+
             iOrderService.newOrder(newOrder);
-//        } else {
             Order order = new Order();
             order.setId(newOrder.getId());
             if (flag == 0) {
                 iOrderService.deleteOrder(order);
                 return new ResponseEntity<>(newOrder, HttpStatus.NOT_ACCEPTABLE);
             }
-//        }
-
-//        newOrder.
-
-//        if (flag == 0){
-//            iOrderService.deleteOrder(newOrder.getId());
-//        }
+        iMailService.sendOrderMail(userDto, newOrder,orderItemDtos);
         return new ResponseEntity<>(newOrder, HttpStatus.OK);
     }
+
+
 
 }
