@@ -123,7 +123,7 @@ public class UserController {
         if (user != null) {
             int code = (int) Math.floor(((Math.random() * 8999) + 1000));
             Mail mail = new Mail();
-            mail.setMailFrom("thomsonbel12@gmail.com");
+            mail.setMailFrom("phancongtu25032002@gmail.com");
             mail.setMailTo(user.getEmail());
             mail.setMailSubject("Reset your password - TLStore: ");
             mail.setMailContent("Your code is: " + code + "\nPlease enter the code above to reset your Password!!");
